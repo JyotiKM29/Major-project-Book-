@@ -5,9 +5,10 @@ import styles from '../styles/Pages/signin.module.scss';
 import Image from 'next/image';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import signin from './signin';
 
 
-function Signin() {
+function Signup() {
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -197,4 +198,4 @@ function Signin() {
   );
 }
 
-export default Signin
+export default Signup

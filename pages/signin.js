@@ -2,19 +2,37 @@ import { useState } from "react";
 import styles from "../styles/Pages/signup.module.scss";
 import Image from "next/image";
 import Link from "next/link";
+import axios from "axios";
+import { useRouter } from 'next/router';
 
-function Signup() {
+function Signin() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const router = useRouter();
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     console.log(formData);
-    // You can send the form data to your API here to verify the user's credentials
-    // and log them in if the credentials are correct
+    try {
+      const response = await axios.post("/api/verifylogin", formData);
+      console.log("working perfectly");
+      if (response.status === 200) {
+        localStorage.setItem("user", JSON.stringify(response.data));
+        router.push("/");
+      }
+      console.log("working perfectly");
+    } catch (error) {
+      console.error("found error ", error);
+      setIsLoading(false);
+    }
   };
+
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -23,6 +41,10 @@ function Signup() {
       [name]: value,
     }));
   };
+
+
+
+
 
   return (
     <>
@@ -85,4 +107,4 @@ function Signup() {
   );
 }
 
-export default Signup
+export default Signin
