@@ -38,7 +38,7 @@ function Signup() {
           
         </div>
         <div className={styles.signup_main} >
-         <h1 className={styles.heading}>Sign Up</h1>
+         <h1 className={styles.heading}>Sign In</h1>
           <form onSubmit={handleSubmit}>
             <label className={styles.label}>
               Email:
