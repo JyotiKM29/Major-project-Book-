@@ -2,6 +2,8 @@
 import Head from "next/head";
 import Home from '../Component/Home';
 import { useEffect, useState } from "react";
+import Signup from "./signup";
+import Signin from "./signin";
 
 function Homepage() {
     const [user, setUser] = useState(null);
@@ -37,7 +39,7 @@ function Homepage() {
 
 
             <div>
-                {user? <Home/> : "jyoti"}
+                {user? <Home/> : <Signin/>}
              {/* <Home /> */}
          </div>
         </>

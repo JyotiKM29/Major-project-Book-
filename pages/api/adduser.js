@@ -1,42 +1,52 @@
-//next js router 
+// next js router
 import user from "../../models/usermodel";
-import connectDb from "../../middleware/mongoose"
+import connectDb from "../../middleware/mongoose";
 
-const handler = async (req,res)=>{
-    if(req.method == 'POST'){
+const handler = async (req, res) => {
+  if (req.method === "POST") {
+    
 
-        console.log(req.body);
+    const { name, age, email, phone, city, state, type, password } = req.body;
 
-        let p = new user({
-            name:req.body.name,
-            age:req.body.age,
-            email:req.body.email,
-            phone:req.body.phone,
-            city:req.body.city,
-            state:req.body.state,
-            type:req.body.typeOfBook,
-            password:req.body.password
+    
+    try {
+      const existUser = await user.find({ email }).exec();
+        console.log("user exist", existUser);
+
+
+      if (existUser && existUser.length > 0) {
+        return res.status(400).json({ msg: "User already exists, please login" });
+        return;
+      }
+
+        let newUser = new user({
+          name,
+          age,
+          email,
+          phone,
+          city,
+          state,
+          type,
+          password,
         });
 
-        try {
-           await p.save();
-           console.log("data saved in database");
+      await newUser.save();
+      console.log("Data saved in the database");
 
-           res.status(200).json({success:"data saved"});
-       } catch (error) {
-        res.status(404).json({error:"data can not be saved"});
-       }
+      return res.status(200).json({ success: "Data saved successfully" });
+    } catch (error) {
+      console.error("Error saving data:", error);
 
+      // Check for specific database error (e.g., validation error)
+      if (error.name === "ValidationError") {
+        return res.status(400).json({ error: error.message });
+      } else {
+        return res.status(500).json({ error: "Internal server error" });
+      }
     }
-    else {
-        res.status(404).json({error: "this method is not allowed here"}); 
-    }
-    // let users = await user.find();
-    // console.log();
-
-}
-
+  } else {
+    return res.status(404).json({ error: "This method is not allowed here" });
+  }
+};
 
 export default connectDb(handler);
-
-

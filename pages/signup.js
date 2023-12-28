@@ -23,26 +23,33 @@ function Signup() {
   });
 
   const [isloading, setIsLoading] = useState(false);
+  const [erroro, setError] = useState(null);
+
   const router = useRouter();
   
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsLoading(true);
+  try {
+    console.log("Form Data:", formData);
+    const response = await axios.post("/api/adduser", formData);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const response = await axios.post('/api/adduser', formData);
-      if (response) {
-        router.push('/signin');
-      }
-      console.log("working perfectly"); // Optional: log the response from the server
-      // Optionally, you can perform any additional actions after the successful request, such as showing a success message or redirecting the user.
-    } catch (error) {
-      console.error("found error ",error);
-      setIsLoading(false);
-      // Optionally, handle any errors that occur during the request.
+    if (response) {
+      router.push("/signin");
     }
-    console.log("here is working" + formData);
+    console.log("Working perfectly");
+  } catch (error) {
+    // console.error("Found error: ", error);
+    // console.error("Error response data:", error.response.data);
+    // console.error("Error response status:", error.response.status);
+     setError(
+       error.response ? error.response.data : "An unexpected error occurred"
+     );
+    // Update the way error is set
+    setIsLoading(false);
   }
+  console.log("Here is working: " + formData);
+};
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -171,15 +178,16 @@ function Signup() {
                 className={styles.input}
                 type="password"
                 name="password"
-                alue={formData.password}
+                value={formData.password}
                 onChange={handleChange}
                 required
               />
             </label>
             <br />
 
+            <p className={styles.label}>{erroro && erroro.msg}</p>
             <button className={styles.btn_submit} type="submit">
-              {isloading ? "Adding user..." :  "Submit"} &#x2197;
+              {isloading ? "Adding user..." : "Submit"} &#x2197;
             </button>
           </form>
         </div>
