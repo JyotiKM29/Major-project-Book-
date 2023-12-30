@@ -1,32 +1,36 @@
-//next js router 
+// pages/api/updateUser.js
 
 import user from "../../models/usermodel";
-// import connectDB from "@/middleware/mongoose";
-import connectDb from "../../middleware/mongoose"
+import connectDb from "../../middleware/mongoose";
 
-const handler = async (req,res)=>{
+const handler = async (req, res) => {
+  if (req.method === "PUT") {
+    try {
+      const { _id, ...updateFields } = req.body;
 
-    if(req.method == 'POST'){
+      // Check if the user exists
+      const existingUser = await user.findById(_id);
 
-        console.log(req.body);
-        let s = await user.findByIdAndRemove(req.body._id,req.body);
-       
-       try {
-        res.status(200).json({sucess:"Data is updated properly"});
-       } catch (error){
-        res.status(404).json({error:"data can not be updated"});
-       }
+      if (!existingUser) {
+        return res.status(404).json({ error: "User not found" });
+      }
 
+      // Update the user fields
+      const updatedUser = await user.findByIdAndUpdate(_id, updateFields, {
+        new: true,
+        runValidators: true,
+      });
+
+      res
+        .status(200)
+        .json({ success: "User data updated successfully", user: updatedUser });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
-    else {
-        res.status(404).json({error: "this method is not allowed here"}); 
-    }
-    // let users = await user.find();
-    // console.log();
-
-}
-
+  } else {
+    res.status(404).json({ error: "This method is not allowed here" });
+  }
+};
 
 export default connectDb(handler);
-
-
