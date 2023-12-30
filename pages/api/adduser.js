@@ -4,36 +4,37 @@ import connectDb from "../../middleware/mongoose";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    
-
     const { name, age, email, phone, city, state, type, password } = req.body;
 
-    
     try {
       const existUser = await user.find({ email }).exec();
-        console.log("user exist", existUser);
-
+      console.log("user exist", existUser);
 
       if (existUser && existUser.length > 0) {
-        return res.status(400).json({ msg: "User already exists, please login" });
+        return res
+          .status(400)
+          .json({ msg: "User already exists, please login" });
         return;
       }
 
-        let newUser = new user({
-          name,
-          age,
-          email,
-          phone,
-          city,
-          state,
-          type,
-          password,
-        });
+      let newUser = new user({
+        name,
+        age,
+        email,
+        phone,
+        city,
+        state,
+        type,
+        password,
+      });
 
-      await newUser.save();
+      const saveduser = await newUser.save();
+
       console.log("Data saved in the database");
 
-      return res.status(200).json({ success: "Data saved successfully" });
+      return res
+        .status(200)
+        .json({ success: "Data saved successfully", saveduser });
     } catch (error) {
       console.error("Error saving data:", error);
 
