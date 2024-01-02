@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
     state: { type: String, required: true },
     type: { type: String },
     password: { type: String },
+    isAdmin:{type:Boolean, default:false},
     resetToken: { type: String, default: null },
     resetTokenIssuedAt: { type: Date, default: null },
     resetTokenExpiresAt: { type: Date, default: null }, // New field for reset token expiry
