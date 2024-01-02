@@ -1,29 +1,28 @@
-// next js router
-import user from "../../models/usermodel"; // Adjust the path accordingly
+//next js router
+
+import user from "../../models/usermodel";
+// import connectDB from "@/middleware/mongoose";
 import connectDb from "../../middleware/mongoose";
 
 const handler = async (req, res) => {
-  try {
-    await connectDb(); // Ensure that this properly connects to the database
 
-    if (req.method === "POST") {
-      const { _id } = req.body;
+  if (req.method === 'POST') {
+    
 
-      // Use findById without an object for simpler usage
-      let client = await user.find({ _id });
+    
 
-      if (client) {
-        res.status(200).json({ client });
-      } else {
-        res.status(400).json({ msg: "User not found" });
-      }
-    } else {
-      res.status(404).json({ error: "This method is not allowed here" });
-    }
-  } catch (error) {
-    console.error("Error in the handler:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+
+
+
+
+
   }
+
+
+
+  let users = await user.find();
+  console.log();
+  res.status(200).json({ users });
 };
 
-export default handler;
+export default connectDb(handler);

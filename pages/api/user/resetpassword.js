@@ -1,4 +1,4 @@
-import user from "../../models/usermodel";
+import user from "../../../models/usermodel";
 import connectDB from "@/middleware/mongoose";
 import jwt from "jsonwebtoken";
 
@@ -18,11 +18,9 @@ const handler = async (req, res) => {
       }
 
       if (existingUser.resetTokenExpiresAt < Date()) {
-        return res
-          .status(400)
-          .json({
-            msg: "Reset token expired. Please create another token again.",
-          });
+        return res.status(400).json({
+          msg: "Reset token expired. Please create another token again.",
+        });
       }
 
       if (newPassword !== confirmPassword) {
@@ -36,13 +34,11 @@ const handler = async (req, res) => {
       existingUser.resetTokenExpiresAt = new Date();
       const result = await existingUser.save();
 
-      return res
-        .status(200)
-        .json({
-          user: result,
-          msg: "Password changed successfully",
-          status: "success",
-        });
+      return res.status(200).json({
+        user: result,
+        msg: "Password changed successfully",
+        status: "success",
+      });
     } catch (error) {
       console.log("Error at resetpassword", error);
       return res.status(500).json({ message: error.message });
