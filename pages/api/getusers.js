@@ -1,29 +1,36 @@
-// next js router
-import user from "../../models/usermodel"; // Adjust the path accordingly
+//next js router
+
+import user from "../../models/usermodel";
+// import connectDB from "@/middleware/mongoose";
 import connectDb from "../../middleware/mongoose";
 
 const handler = async (req, res) => {
-  try {
-    await connectDb(); // Ensure that this properly connects to the database
 
-    if (req.method === "POST") {
-      const { _id } = req.body;
+  if (req.method === 'POST') {
+    
+    try {
+      const _id = req.body._id;
 
-      // Use findById without an object for simpler usage
-      let client = await user.find({ _id });
+      const existingUser = await user.findOne({ _id });
+      // console.log(existingUser);
+       if (existingUser.isAdmin===true) {
+         let users = await user.find();
+         res.status(200).json({ users });
+       } else {
+         res
+           .status(404)
+           .json({ msg: "this request doesn't exist", status: "error" });
+         return;
+       }
+    } catch (error) {
+     
+      res.status(400).json({ msg: error.message, status: "error" });
 
-      if (client) {
-        res.status(200).json({ client });
-      } else {
-        res.status(400).json({ msg: "User not found" });
-      }
-    } else {
-      res.status(404).json({ error: "This method is not allowed here" });
     }
-  } catch (error) {
-    console.error("Error in the handler:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+   
+  } else {
+    res.status(400).json({ msg: "this request does'nt allowed here" });
   }
 };
 
-export default handler;
+export default connectDb(handler);

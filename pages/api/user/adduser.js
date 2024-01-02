@@ -1,6 +1,6 @@
 // next js router
-import user from "../../models/usermodel";
-import connectDb from "../../middleware/mongoose";
+import user from "../../../models/usermodel";
+import connectDb from "../../../middleware/mongoose";
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
