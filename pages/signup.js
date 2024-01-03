@@ -32,7 +32,7 @@ const handleSubmit = async (e) => {
   setIsLoading(true);
   try {
     console.log("Form Data:", formData);
-    const response = await axios.post("/api/adduser", formData);
+    const response = await axios.post("/api/user/adduser", formData);
 
     if (response) {
       router.push("/signin");
