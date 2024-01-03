@@ -22,7 +22,7 @@ function Signin() {
     setIsLoading(true);
     console.log(formData);
     try {
-      const response = await axios.post("/api/verifylogin", formData);
+      const response = await axios.post("/api/user/verifylogin", formData);
       console.log("working perfectly");
       if (response.status === 200) {
         localStorage.setItem("user", JSON.stringify(response.data));
